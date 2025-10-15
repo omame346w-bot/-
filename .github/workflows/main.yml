@@ -2,8 +2,8 @@ name: JPX400 -20% Kairi Alert
 
 on:
   schedule:
-    # JST16:00 = UTC07:00（平日だけ実行）
-    - cron: '0 7 * * 1-5'
+      # JST18:00 = UTC09:00（平日だけ実行）
+    - cron: '0 9 * * 1-5'
   workflow_dispatch: {}  # 手動実行も可
 
 jobs:
