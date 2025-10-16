@@ -1,13 +1,13 @@
-name: JPX400 -20% Kairi Alert
+name: Stock Alert Bot
 
 on:
   schedule:
-      # JST18:00 = UTC09:00（平日だけ実行）
+    # 平日（月〜金）の18時（日本時間）に実行
     - cron: '0 9 * * 1-5'
-  workflow_dispatch: {}  # 手動実行も可
+  workflow_dispatch:  # 手動実行も可能
 
 jobs:
-  run-alert:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -21,10 +21,9 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install yfinance pandas
+          pip install yfinance pandas requests
 
       - name: Run alert script
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        run: |
-          python notify_kairi25.py --tickers tickers_jpx400.txt --slack_webhook "$SLACK_WEBHOOK_URL"
+        run: python notify_kairi25.py
