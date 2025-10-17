@@ -23,7 +23,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install yfinance pandas requests
 
-      - name: Run alert script
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        run: python notify_kairi25.py
+     - name: Run alert script
+  env:
+    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  run: |
+    python notify_kairi25.py \
+      --tickers tickers_jpx400.txt \
+      --slack_webhook "$SLACK_WEBHOOK_URL"
+
