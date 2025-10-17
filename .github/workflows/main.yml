@@ -2,9 +2,9 @@ name: Stock Alert Bot
 
 on:
   schedule:
-    # 平日（月〜金）の18時（日本時間）に実行
+    # 平日18:00（JST）＝ UTC 09:00
     - cron: '0 9 * * 1-5'
-  workflow_dispatch:  # 手動実行も可能
+  workflow_dispatch:
 
 jobs:
   build:
@@ -23,11 +23,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install yfinance pandas requests
 
-     - name: Run alert script
-  env:
-    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-  run: |
-    python notify_kairi25.py \
-      --tickers tickers_jpx400.txt \
-      --slack_webhook "$SLACK_WEBHOOK_URL"
+      # （任意）Webhook疎通テスト。不要なら削除可
+      - name: Slack webhook quick test
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          curl -X POST -H "Content-Type: application/json" \
+            --data '{"text":"Webhook OK from GitHub Actions"}' \
+            "$SLACK_WEBHOOK_URL"
 
+      - name: Run alert script
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          python notify_kairi25.py \
+            --tickers tickers_jpx400.txt \
+            --slack_webhook "$SLACK_WEBHOOK_URL"
